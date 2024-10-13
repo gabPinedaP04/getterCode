@@ -15,13 +15,13 @@ import os
 
 root = Tk()
 root.title("Título")
+root.geometry("800x800")
 
-root.geometry('900x800')  
+
+
 
 root.resizable(0,1)
 
-mainframe = ttk.Frame(root, padding="3 3 12 12")
-mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 
 print(pytesseract.get_tesseract_version)
 
@@ -39,6 +39,7 @@ def takeScreenshot():
     # Mostrar la captura si el archivo existe
     if os.path.isfile(file_path):
         show_screenshot(file_path)
+        getText(file_path)
         subprocess.Popen(['notify-send','Captura tomada, extrayendo texto...'])
         
 
@@ -50,7 +51,10 @@ def takeScreenshot():
 file_path = 'screenshot.png'
 
 
-
+def getText(file_path):
+    image = Image.open(file_path)
+    text = pytesseract.image_to_string(image)
+    print(text)
 
 
 def getImage():
@@ -77,19 +81,19 @@ def askChatGPT():
 buttonUpload = Button(root, text="Subir imagen", command=getImage)
 
 
-buttonUpload.grid(column=1, row=0, padx=10, pady=10)  
+buttonUpload.pack()
 
 
 buttonScrenshot = Button(root, text="Seleccionar codigo", command=takeScreenshot)
 
-buttonScrenshot.grid(column=0, row=0, padx=10, pady=10)  
+buttonScrenshot.pack()  
 
 
 buttonChatGpt = Button(root, text="Ask ChatGPT", command=askChatGPT)
 
 
 
-buttonChatGpt.grid(column=0, row=1, padx=10, pady=10)
+buttonChatGpt.pack()
 
 
 ##Mostrar la imagennn --- 
@@ -99,7 +103,7 @@ photo = ImageTk.PhotoImage(image)
 
 label = Label(root, image = photo)
 label.image = photo
-label.grid(row=1, column=1, padx=10, pady=10)
+label.pack()
 
 
 def show_screenshot(file_path):
@@ -111,6 +115,8 @@ def show_screenshot(file_path):
     
     # Convertir la imagen a un formato compatible con Tkinter
     img_tk = ImageTk.PhotoImage(img)
+
+    
     
     # Mostrar la imagen en la ventana
     label.config(image=img_tk)
